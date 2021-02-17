@@ -1,26 +1,14 @@
-def print_wrapper(f):
-    def wrapped(*args, **kwargs):
-        result = f(*args, **kwargs)
-        print(result)
-        return result
-    return wrapped
-
-def add(a, b):
-    return a + b
-add = print_wrapper(add)
-
-@print_wrapper
-def add2(a, b):
-    return a + b
-
 from datetime import datetime
 from functools import wraps
 from hashlib import sha1
 
 from bson import ObjectId
+from bson.json_util import dumps
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import jwt
 from pymongo import MongoClient
+import json
 
 secret = "the sky is blue"
 client = MongoClient()
@@ -37,7 +25,7 @@ db.users.update_one({
 }, upsert=True)
 
 app = Flask(__name__)
-
+cors = CORS(app)
 
 @app.route('/hello')
 def hello():
@@ -89,5 +77,46 @@ def login_required(f):
 @login_required
 def logged_in_hello(token=None):
     return f'hello {token["sub"]}\n'
+
+@app.route('/listings', methods=['GET'])
+def listings():
+    '''
+    if request.method == 'POST':
+        listing = request.json
+        db.listings.insert_one(listing)
+    '''
+    #list (python dict form) of documents in listing collection
+    car_listings = list(db.listings.find())
+    #print(car_listings)
+    json_data = dumps(car_listings)
+    #print(json_data)
+    return json_data
+
+@app.route('/listings', methods=['POST'])
+#@login_required
+def add_listing():
+    listing = request.json
+    db.listings.insert_one(listing)
+    listings = list(db.listings.find())
+    json_listings = dumps(listings)
+    return json_listings
+'''
+@app.route('/listings/<_id>', methods=['GET'])
+def car_data():
+        find_car = db.listings.find_one(_id)
+        return jsonify(find_car)
+
+
+@app.route('/listings/<_id>', methods='DELETE')
+@login_required
+def delete_car():
+        db.listings.deleteOne(_id)
+        return jsonify({'successfully deleted!'})
+
+@app.route('/listings/stats', methods=['GET'])
+def stats():
+    return
+
+'''
 
 app.run()

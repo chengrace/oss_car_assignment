@@ -5,23 +5,34 @@ import Header from './components/layout/Header';
 import Todos from './components/todos/Todos';
 import AddTodo from './components/todos/AddTodo';
 import About from './components/pages/About';
-//import axios from 'axios';
-import {v4 as uuid} from 'uuid';
+import axios from 'axios';
+//import {v4 as uuid} from 'uuid';
 
 class App extends Component {
   state = {
     todos: [],
   }
-
+/*
   componentDidMount(){
-    //axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
-    //.then(res => this.setState({ todos: res.data }))
+    axios.get('http://localhost:5000/listings')
+    .then(res => this.setState({ todos: res.data }))
   }
-
+*/
+  componentDidMount(){
+    axios({
+      method: 'get',
+      url: 'http://localhost:5000/listings',
+      headers: {'Content-Type': 'application/json'},
+    })
+    .then(res => this.setState({ todos: res.data }))
+    .catch(error => {
+      console.log(error.response)
+    });
+  }
   // Toggle complete
-  markComplete = (id) => {
+  markComplete = (_id) => {
     this.setState( {todos: this.state.todos.map(todo => {
-      if(todo.id === id){
+      if(todo._id === _id){
         todo.completed = !todo.completed; //set to opposite when toggled
       }
       return todo;
@@ -30,19 +41,19 @@ class App extends Component {
   }
 
   // Delete Todo entry
-  delTodo = (id) => {
+  delTodo = (_id) => {
     //deletes it on the server and updates api
     //axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
     //.then(res => this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] }));
 
     //change out our todos array with a filtered array without the entry to be deleted
     // ... is spread operator, copies everything already there
-    this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] });
+    this.setState({ todos: [...this.state.todos.filter(todo => todo._id !== _id)] });
   }
   
   // Add Todo
   addTodo = (model, make, year, price, sellerName, description) => {
-    
+    /*
     const newTodo = {
       id: uuid(),
       model,
@@ -53,8 +64,11 @@ class App extends Component {
       description,
       completed: false
     }
-    /*
-    axios.post('https://jsonplaceholder.typicode.com/todos', {
+    //can't just simply change todos, we have to make a copy with ...
+    this.setState({ todos: [...this.state.todos, newTodo]})
+    */
+   
+    axios.post('http://localhost:5000/listings', {
       model,
       make,
       year,
@@ -62,16 +76,21 @@ class App extends Component {
       sellerName,
       description,
       completed: false
+    },
+    {
+      headers: {'Content-Type': 'application/json'}
     })
       .then((res) => {
-        this.setState({ todos: [...this.state.todos, res.data] })
+        //this.setState({ todos: [...this.state.todos, res.data] })
+        this.setState({ todos: res.data })
         console.log(res.data);
         console.log(this.state.todos);
         })
-      */
-    //can't just simply change todos, we have to make a copy with ...
-    this.setState({ todos: [...this.state.todos, newTodo]})
+        .catch(error => {
+          console.log(error.response)
+        });
   }
+
   
   render() {
     return (
