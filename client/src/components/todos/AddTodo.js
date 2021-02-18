@@ -11,6 +11,24 @@ class AddTodo extends Component{
         description: ''
     }
 
+    getDivStyle = () => {
+        return {
+            //background: '#e6f2ff',
+            padding: '5px',
+            textAlign: 'center',
+            margin: 'auto',
+            //borderBottom: '1px #ccc dotted',
+        }
+    }
+    getFormStyle = () => {
+        return {
+            width: '100%',
+            margin: '8px 0',
+            boxSizing: 'border-box',
+            display: 'inline-block'
+            //display: 'flex'
+        }
+    }
     // we wanna pass this up to app.js
     onSubmit = (e) => {
         e.preventDefault();
@@ -23,76 +41,78 @@ class AddTodo extends Component{
 
     render() {
         return(
-            <form onSubmit={this.onSubmit} style={{ display: 'flex' }}>
-                <label>
-                <input 
-                    type = "text" 
-                    name="model" 
-                    placeholder="Enter car model" 
-                    style={{ flex: '10', padding: '5px'}}
-                    value={this.state.model}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type = "text"
-                    name="make"
-                    value={this.state.make}
-                    placeholder="Enter car make" 
-                    style={{ flex: '10', padding: '5px'}}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type = "text"
-                    name="year"
-                    value={this.state.year}
-                    placeholder="Enter car model year"
-                    style={{ flex: '10', padding: '5px'}}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type = "text"
-                    name="price"
-                    value={this.state.price}
-                    placeholder="Enter car price"
-                    style={{ flex: '10', padding: '5px'}}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type = "text"
-                    name="sellerName"
-                    value={this.state.sellerName}
-                    placeholder="Enter seller name"
-                    style={{ flex: '10', padding: '5px'}}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type = "text"
-                    name="description"
-                    value={this.state.description}
-                    placeholder="Enter description"
-                    style={{ flex: '10', padding: '5px'}}
-                    onChange={this.onChange}
-                />
-                </label>
-                <label>
-                <input 
-                    type="submit"
-                    value="Add Listing"
-                    className="btn"
-                    style={{flex: '1'}}
-                />
-                </label>
-            </form>
+            <div style={this.getDivStyle()}>
+                <form onSubmit={this.onSubmit} style={this.getFormStyle()}>
+                    <label>
+                    <input 
+                        type = "text" 
+                        name="model" 
+                        placeholder="Enter car model" 
+                        style={{ flex: '10', padding: '5px'}}
+                        value={this.state.model}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type = "text"
+                        name="make"
+                        value={this.state.make}
+                        placeholder="Enter car make" 
+                        style={{ flex: '10', padding: '5px'}}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type = "text"
+                        name="year"
+                        value={this.state.year}
+                        placeholder="Enter car model year"
+                        style={{ flex: '10', padding: '5px'}}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type = "text"
+                        name="price"
+                        value={this.state.price}
+                        placeholder="Enter car price"
+                        style={{ flex: '10', padding: '5px'}}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type = "text"
+                        name="sellerName"
+                        value={this.state.sellerName}
+                        placeholder="Enter seller name"
+                        style={{ flex: '10', padding: '5px'}}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type = "text"
+                        name="description"
+                        value={this.state.description}
+                        placeholder="Enter description"
+                        style={{ flex: '10', padding: '5px'}}
+                        onChange={this.onChange}
+                    />
+                    </label>
+                    <label>
+                    <input 
+                        type="submit"
+                        value="Add Listing"
+                        className="btn"
+                        style={{flex: '1'}}
+                    />
+                    </label>
+                </form>
+            </div>
         )
     }
 }
