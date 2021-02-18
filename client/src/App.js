@@ -12,12 +12,7 @@ class App extends Component {
   state = {
     todos: [],
   }
-/*
-  componentDidMount(){
-    axios.get('http://localhost:5000/listings')
-    .then(res => this.setState({ todos: res.data }))
-  }
-*/
+
   componentDidMount(){
     axios({
       method: 'get',
@@ -43,12 +38,23 @@ class App extends Component {
   // Delete Todo entry
   delTodo = (_id) => {
     //deletes it on the server and updates api
-    //axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
-    //.then(res => this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] }));
+    console.log(_id);
+    //console.log(this.state.todos);
+    axios.delete(`http://localhost:5000/listings/${_id}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+    .then((res) => {
+      this.setState({ todos: res.data })
+      console.log(res.data);
+      })
+    .catch(error => {
+      console.log(error.response)
+    });
+    //.then(res => this.setState({ todos: [...this.state.todos.filter(todo => todo._id !== _id)] }));
 
     //change out our todos array with a filtered array without the entry to be deleted
     // ... is spread operator, copies everything already there
-    this.setState({ todos: [...this.state.todos.filter(todo => todo._id !== _id)] });
+    //this.setState({ todos: [...this.state.todos.filter(todo => todo._id !== _id)] });
   }
   
   // Add Todo
@@ -80,15 +86,15 @@ class App extends Component {
     {
       headers: {'Content-Type': 'application/json'}
     })
-      .then((res) => {
-        //this.setState({ todos: [...this.state.todos, res.data] })
-        this.setState({ todos: res.data })
-        console.log(res.data);
-        console.log(this.state.todos);
-        })
-        .catch(error => {
-          console.log(error.response)
-        });
+    .then((res) => {
+      //this.setState({ todos: [...this.state.todos, res.data] })
+      this.setState({ todos: res.data })
+      console.log(res.data);
+      console.log(this.state.todos);
+      })
+      .catch(error => {
+        console.log(error.response)
+      });
   }
 
   

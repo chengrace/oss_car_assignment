@@ -100,23 +100,33 @@ def add_listing():
     listings = list(db.listings.find())
     json_listings = dumps(listings)
     return json_listings
+
+@app.route('/listings/<_id>', methods=['DELETE'])
+#@login_required
+def delete_car(_id):
+    print(_id)
+    db.listings.delete_one({"_id": _id})
+    listings = list(db.listings.find())
+    #print(listings)
+    json_listings = dumps(listings)
+    return json_listings
+
 '''
 @app.route('/listings/<_id>', methods=['GET'])
-def car_data():
-        find_car = db.listings.find_one(_id)
+def car_data(_id):
+        find_car = db.listings.find({'_id': ObjectId(_id)})
         return jsonify(find_car)
-
-
-@app.route('/listings/<_id>', methods='DELETE')
-@login_required
-def delete_car():
-        db.listings.deleteOne(_id)
-        return jsonify({'successfully deleted!'})
 
 @app.route('/listings/stats', methods=['GET'])
 def stats():
-    return
+    group_by_make = db.listings.aggregate([
+        {"$group":{
+            "make": "$make",
+            "count": {$sum": 1}}
+        }}
+    ])
+    return group_by_make
 
 '''
-
-app.run()
+if __name__ == '__main__':
+    app.run(debug = True)
