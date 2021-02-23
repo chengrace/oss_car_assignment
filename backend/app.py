@@ -57,6 +57,22 @@ def login():
     }, secret)
     return jsonify({'token': token})
 
+''' Mickey's code
+@app.route('/create-account', methods=['POST'])
+def create_account():
+    print(request.headers)
+    data = request.json
+    print(data)
+    name = data['name']
+    _pass = data['pass'].encode('utf-8')
+    hashpass = sha1(_pass).hexdigest()
+
+    db.users.insert_one({
+        'name': name,
+        'pass': hashpass
+    })
+    return success', 201
+'''
 def login_required(f):
     @wraps(f)
     def wrapped(*args, **kwargs):
@@ -79,6 +95,7 @@ def logged_in_hello(token=None):
     return f'hello {token["sub"]}\n'
 
 @app.route('/listings', methods=['GET'])
+#return an array json of the listings
 def listings():
     '''
     if request.method == 'POST':
@@ -94,6 +111,7 @@ def listings():
 
 @app.route('/listings', methods=['POST'])
 #@login_required
+#accept a listing through the post body and insert it into the database
 def add_listing():
     listing = request.json
     db.listings.insert_one(listing)
@@ -103,30 +121,38 @@ def add_listing():
 
 @app.route('/listings/<_id>', methods=['DELETE'])
 #@login_required
+#remove listing from data base
 def delete_car(_id):
-    print(_id)
-    db.listings.delete_one({"_id": _id})
+    #print(_id)
+    db.listings.delete_one({"_id": ObjectId(_id)})
     listings = list(db.listings.find())
     #print(listings)
     json_listings = dumps(listings)
     return json_listings
 
-'''
+#mark a listing as sold
+
+
 @app.route('/listings/<_id>', methods=['GET'])
+#return the data for a specific car with _id
 def car_data(_id):
-        find_car = db.listings.find({'_id': ObjectId(_id)})
-        return jsonify(find_car)
+    find_car = db.listings.find({'_id': ObjectId(_id)})
+    listing = list(find_car)
+    json_listing = dumps(listing)
+    return json_listing
 
 @app.route('/listings/stats', methods=['GET'])
+#return the number of listings for each make (aggregate)
 def stats():
     group_by_make = db.listings.aggregate([
         {"$group":{
-            "make": "$make",
-            "count": {$sum": 1}}
-        }}
+            "_id": "$make",
+            "count": {"$sum": 1}}
+        }
     ])
-    return group_by_make
+    stats = list(group_by_make)
+    stats_json = dumps(stats)
+    return stats_json
 
-'''
 if __name__ == '__main__':
     app.run(debug = True)

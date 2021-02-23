@@ -38,9 +38,8 @@ class App extends Component {
   // Delete Todo entry
   delTodo = (_id) => {
     //deletes it on the server and updates api
-    console.log(_id);
-    //console.log(this.state.todos);
-    axios.delete(`http://localhost:5000/listings/${_id}`, {
+    var id = _id["$oid"];
+    axios.delete(`http://localhost:5000/listings/${id}`, {
       headers: {'Content-Type': 'application/json'}
     })
     .then((res) => {

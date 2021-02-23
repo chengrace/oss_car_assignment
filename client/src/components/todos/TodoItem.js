@@ -26,7 +26,7 @@ export class TodoItem extends Component {
                 <p> 
                     {/*<input type="checkbox" onChange={this.props.markComplete.bind(this, id)} /> {' '}*/}
                     <button onClick={this.props.markComplete.bind(this, _id)} style={sellBtn}>{buttonName} </button> {'  '}
-                    <b>{model} {make} {year}</b> || {sellerName} is selling for <b>{price}</b> ({description})
+                    <b>{model} {make} {year}</b> || <i>{sellerName}</i> is selling for <b>{price}</b> ({description})
                     <button onClick={this.props.delTodo.bind(this, _id)} 
                             style={btnStyle}> x </button>
                 </p>
