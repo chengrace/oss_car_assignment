@@ -121,25 +121,42 @@ def add_listing():
 
 @app.route('/listings/<_id>', methods=['DELETE'])
 #@login_required
-#remove listing from data base
+#remove listing from data base or mark a listing as sold
 def delete_car(_id):
-    #print(_id)
+    #returns _id as a string so must turn back into ObjectId
     db.listings.delete_one({"_id": ObjectId(_id)})
     listings = list(db.listings.find())
-    #print(listings)
+
+    json_listings = dumps(listings)
+    return json_listings
+        
+
+@app.route('/listings/<_id>', methods=['GET', 'POST'])
+#get --return the data for a specific car with _id
+#post -- mark a listing as sold
+def car_data(_id):
+
+    find_car = db.listings.find({'_id': ObjectId(_id)})
+
+    if(request.method == 'GET'):
+        listing = list(find_car)
+        json_listing = dumps(listing)
+        return json_listing
+    #toggles sold on and off
+    completed = find_car[0].get("completed")
+    myquery = {"_id": ObjectId(_id)}
+    if(completed):
+        updateSold = {"$set": { "completed": False}}
+        db.listings.update_one(myquery, updateSold)
+    else:
+        updateSold = {"$set": { "completed": True }}
+        db.listings.update_one(myquery, updateSold)
+    
+
+    listings = list(db.listings.find())
     json_listings = dumps(listings)
     return json_listings
 
-#mark a listing as sold
-
-
-@app.route('/listings/<_id>', methods=['GET'])
-#return the data for a specific car with _id
-def car_data(_id):
-    find_car = db.listings.find({'_id': ObjectId(_id)})
-    listing = list(find_car)
-    json_listing = dumps(listing)
-    return json_listing
 
 @app.route('/listings/stats', methods=['GET'])
 #return the number of listings for each make (aggregate)

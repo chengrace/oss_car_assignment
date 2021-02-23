@@ -24,8 +24,23 @@ class App extends Component {
       console.log(error.response)
     });
   }
+
   // Toggle complete
   markComplete = (_id) => {
+    
+    var id = _id["$oid"];
+    axios.post(`http://localhost:5000/listings/${id}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+    .then((res) => {
+      this.setState({ todos: res.data })
+      console.log(res.data);
+      })
+    .catch(error => {
+      console.log(error.response)
+    });
+
+    /*
     this.setState( {todos: this.state.todos.map(todo => {
       if(todo._id === _id){
         todo.completed = !todo.completed; //set to opposite when toggled
@@ -33,6 +48,7 @@ class App extends Component {
       return todo;
     })
     });
+    */
   }
 
   // Delete Todo entry
